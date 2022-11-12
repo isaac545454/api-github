@@ -7,24 +7,38 @@ import { Link } from "react-router-dom";
 interface Repo {
   name: string;
   description: string;
+  login: string;
 }
 
 interface Issue {
   id: number;
-  user: { avatar_url: string };
+  labels: { id: number; name: string; map: any };
+  user: {
+    title: string;
+    avatar_url: string;
+    login: string;
+  };
   html_url: string;
-  labels: [id: number, label: string];
+
+  title: string;
+}
+interface Label {
+  id: number;
+  name: string;
 }
 
 export default function index({ match }: any) {
   const { repo } = useParams();
-  const [Repo, setRepo] = useState<Repo>({});
-  const [issues, setIssues] = useState<Issue>([]);
-  const [loading, setLoading] = useState(false);
+  const [Repo, setRepo] = useState<Repo>({
+    name: "",
+    description: "",
+    login: "",
+  });
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [Image, setImage] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState<string>("open");
-  console.log(page);
 
   useEffect(() => {
     load();
@@ -65,7 +79,7 @@ export default function index({ match }: any) {
   };
 
   const handleClick = (action: string) => {
-    if ((page === 1) & (action === "anterior"))
+    if (page === 1 && action === "anterior")
       return alert("essa é a primeira pagina");
     setPage(action === "proxima" ? page + 1 : page - 1);
   };
@@ -79,7 +93,7 @@ export default function index({ match }: any) {
   }
 
   return (
-    <div className="max-w-[700px] bg-white rounded shadow p-9 mx-auto my-20 max-[480px]:-my-2">
+    <div className="max-w-[700px] bg-white rounded shadow p-9 mx-auto my-20  max-[480px]:-my-4">
       <Link to="/">
         <FaArrowLeft color="black" size={35} className="" />
       </Link>
@@ -111,9 +125,9 @@ export default function index({ match }: any) {
         </button>
       </div>
       <ul className="mt-8 pt-8 border-t-[1px] border-[#ddd] list-none max-[480px]:mt-4">
-        {issues.map((i) => (
+        {issues.map((i: Issue) => (
           <li
-            Key={String(i.id)}
+            key={String(i.id)}
             className="flex py-4 px-3 mt-2 max-[480px]:mt-1 max-[480px]:justify-center"
           >
             <img
@@ -129,9 +143,9 @@ export default function index({ match }: any) {
                 >
                   {i.title}
                 </a>
-                {i.labels.map((label) => (
+                {i.labels.map((label: Label) => (
                   <span
-                    Key={String(label.id)}
+                    key={String(label.id)}
                     className="bg-[#222] max-w-[300px] font-bold rounded text-white  px-2 mt-2 py-1 max-[480px]:max-w-[200px]"
                   >
                     {label.name}

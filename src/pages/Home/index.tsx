@@ -13,7 +13,7 @@ export default function index() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = useCallback(
-    (e: Event) => {
+    (e: any) => {
       e.preventDefault();
       if (Input === "") return;
       const hashRepo = repo.find((r) => r.name === Input);
@@ -55,10 +55,9 @@ export default function index() {
 
   useEffect(() => {
     const repoStorage = localStorage.getItem("repos");
-    console.log(JSON.parse(repoStorage));
-    if (repoStorage === []) return;
-    setRepo(JSON.parse(repoStorage));
-    console.log(repo);
+    if (repoStorage) {
+      setRepo(JSON.parse(repoStorage));
+    }
   }, []);
 
   const saveItem = (r: Repo[]) => {
