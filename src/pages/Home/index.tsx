@@ -13,7 +13,7 @@ export default function index() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = useCallback(
-    (e) => {
+    (e: Event) => {
       e.preventDefault();
       if (Input === "") return;
       const hashRepo = repo.find((r) => r.name === Input);
@@ -45,7 +45,7 @@ export default function index() {
   );
 
   const handleDelete = useCallback(
-    (rep) => {
+    (rep: string) => {
       const find = repo.filter((r) => r.name !== rep);
       setRepo(find);
       saveItem(find);
@@ -61,7 +61,7 @@ export default function index() {
     console.log(repo);
   }, []);
 
-  const saveItem = (r) => {
+  const saveItem = (r: Repo[]) => {
     localStorage.setItem("repos", JSON.stringify(r));
   };
 
