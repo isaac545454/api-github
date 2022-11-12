@@ -13,7 +13,7 @@ interface Issue {
   id: number;
   user: { avatar_url: string };
   html_url: string;
-  label: [id: number, label: string];
+  labels: [id: number, label: string];
 }
 
 export default function index({ match }: any) {
