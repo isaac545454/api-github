@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { FaGithub, FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -11,8 +11,6 @@ export default function index() {
   const [Input, setInput] = useState<string>("");
   const [repo, setRepo] = useState<Repo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  console.log(repo);
 
   const handleSubmit = useCallback(
     (e) => {
@@ -33,6 +31,7 @@ export default function index() {
             name: res.data.full_name,
           };
           setRepo([...repo, data]);
+          saveItem([...repo, data]);
           setInput("");
         } catch (error) {
           alert("ops... repositorio não econtrado");
@@ -49,9 +48,22 @@ export default function index() {
     (rep) => {
       const find = repo.filter((r) => r.name !== rep);
       setRepo(find);
+      saveItem(find);
     },
     [repo]
   );
+
+  useEffect(() => {
+    const repoStorage = localStorage.getItem("repos");
+    console.log(JSON.parse(repoStorage));
+    if (repoStorage === []) return;
+    setRepo(JSON.parse(repoStorage));
+    console.log(repo);
+  }, []);
+
+  const saveItem = (r) => {
+    localStorage.setItem("repos", JSON.stringify(r));
+  };
 
   return (
     <>
@@ -89,14 +101,17 @@ export default function index() {
         </form>
         <ul className="mt-5">
           {repo.map((rep) => (
-            <li className="list-none flex justify-between items-center border-b-[1px] border-[#000] mt-2">
+            <li
+              key={rep.name}
+              className="list-none flex justify-between items-center border-b-[1px] border-[#000] mt-2"
+            >
               <span className="pb-3 font-bold">
                 <button className="mr-3" onClick={() => handleDelete(rep.name)}>
                   <FaTrash />
                 </button>
                 {rep.name}
               </span>
-              <Link to="/repo">
+              <Link to={`repo/${encodeURIComponent(rep.name)}`}>
                 <FaBars size={20} />
               </Link>
             </li>
