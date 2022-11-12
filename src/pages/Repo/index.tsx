@@ -20,11 +20,10 @@ export default function index({ match }: any) {
   const { repo } = useParams();
   const [Repo, setRepo] = useState<Repo>({});
   const [issues, setIssues] = useState<Issue>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [Image, setImage] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState<string>("open");
-  console.log(page);
 
   useEffect(() => {
     load();

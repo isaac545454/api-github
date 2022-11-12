@@ -55,10 +55,9 @@ export default function index() {
 
   useEffect(() => {
     const repoStorage = localStorage.getItem("repos");
-    console.log(JSON.parse(repoStorage));
+
     if (repoStorage === []) return;
     setRepo(JSON.parse(repoStorage));
-    console.log(repo);
   }, []);
 
   const saveItem = (r: Repo[]) => {
